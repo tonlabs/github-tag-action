@@ -11,7 +11,7 @@ source=${SOURCE:-.}
 dryrun=${DRY_RUN:-false}
 initial_version=${INITIAL_VERSION:-0.0.0}
 tag_context=${TAG_CONTEXT:-repo}
-suffix=${PRERELEASE_SUFFIX:-beta}
+suffix=${PRERELEASE_SUFFIX:-rc}
 verbose=${VERBOSE:-true}
 
 cd ${GITHUB_WORKSPACE}/${source}
@@ -69,9 +69,11 @@ fi
 
 # get current commit hash for tag
 tag_commit=$(git rev-list -n 1 $tag)
+echo "Current commit hash for tag $tag is $tag_commit"
 
 # get current commit hash
 commit=$(git rev-parse HEAD)
+echo "Current commit hash $commit"
 
 if [ "$tag_commit" == "$commit" ]; then
     echo "No new commits since previous tag. Skipping..."
@@ -82,7 +84,7 @@ fi
 # echo log if verbose is wanted
 if $verbose
 then
-  echo $log
+  echo "Git log: $log"
 fi
 
 case "$log" in
@@ -110,7 +112,7 @@ then
     fi
 fi
 
-echo $part
+echo "Part: $part"
 
 # did we get a new tag?
 if [ ! -z "$new" ]
@@ -129,7 +131,7 @@ fi
 
 if $pre_release
 then
-    echo -e "Bumping tag ${pre_tag}. \n\tNew tag ${new}"
+    echo -e "Bumping pre-release tag ${pre_tag}. \n\tNew tag ${new}"
 else
     echo -e "Bumping tag ${tag}. \n\tNew tag ${new}"
 fi
